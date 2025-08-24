@@ -1,49 +1,31 @@
-require("@matterlabs/hardhat-zksync-solc");
-require("@matterlabs/hardhat-zksync-verify");
-
+// Import Hardhat toolbox plugins
+require("@nomicfoundation/hardhat-toolbox");
+// Import dotenv to secure your secret variables
+require("dotenv").config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  zksolc: {
-    version: "1.4.1",
-    compilerSource: "binary",
-    settings: {
-      optimizer: {
-        enabled: true,
-      },
-    },
-  },
-  networks: {
-    zkSyncSepoliaTestnet: {
-      url: "https://sepolia.era.zksync.dev",
-      ethNetwork: "sepolia",
-      zksync: true,
-      chainId: 300,
-      verifyURL:
-        "https://explorer.sepolia.era.zksync.dev/contract_verification",
-    },
-    zkSyncMainnet: {
-      url: "https://mainnet.era.zksync.io",
-      ethNetwork: "mainnet",
-      zksync: true,
-      chainId: 324,
-      verifyURL:
-        "https://zksync2-mainnet-explorer.zksync.io/contract_verification",
-    },
-  },
-  paths: {
-    artifacts: "./artifacts-zk",
-    cache: "./cache-zk",
-    sources: "./contracts",
-    tests: "./test",
-  },
   solidity: {
-    version: "0.8.23",
+    version: "0.8.9", // Match the version used in your smart contract
     settings: {
       optimizer: {
         enabled: true,
         runs: 200,
       },
+    },
+  },
+
+  // Default network
+  defaultNetwork: "hardhat",
+
+  // Configure networks
+  networks: {
+    hardhat: {},
+
+    sepolia: {
+      url: process.env.SEPOLIA_RPC_URL, // Your Sepolia RPC URL (Alchemy/Infura)
+      accounts: [`0x${process.env.PRIVATE_KEY}`], // Your MetaMask private key
+      chainId: 11155111,
     },
   },
 };
