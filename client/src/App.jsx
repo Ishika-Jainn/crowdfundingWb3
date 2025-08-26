@@ -1,21 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import { Sidebar, Navbar } from './components';
 import { CampaignDetails, CreateCampaign, Home, Profile } from './pages';
 
 const App = () => {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsDesktop(window.innerWidth >= 1024); // lg breakpoint
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
   return (
-    <div className="relative sm:p-8 p-4 bg-[#13131a] min-h-screen flex flex-row">
+    <div className="relative bg-[#13131a] min-h-screen flex flex-row">
       
-      {/* Sidebar - full height */}
-      <div className="h-screen mr-10">
-        <Sidebar />
-      </div>
+      {/* Sidebar - hidden on mobile, visible on desktop */}
+      {isDesktop && (
+        <div className="h-screen mr-10">
+          <Sidebar />
+        </div>
+      )}
 
       {/* Main content */}
-      <div className="flex-1 max-sm:w-full max-w-[1280px] mx-auto sm:pr-5">
-        <Navbar />
+      <div className="flex-1 max-w-[1280px] mx-auto p-4 lg:p-8">
+        <Navbar isDesktop={isDesktop} />
 
         <Routes>
           <Route path="/" element={<Home />} />

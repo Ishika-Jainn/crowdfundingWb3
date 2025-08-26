@@ -11,13 +11,20 @@ const Home = () => {
 
   const fetchCampaigns = async () => {
     setIsLoading(true);
-    const data = await getCampaigns();
-    setCampaigns(data);
+    try {
+      const data = await getCampaigns();
+      setCampaigns(data);
+    } catch (error) {
+      console.log("Error fetching campaigns:", error);
+      setCampaigns([]);
+    }
     setIsLoading(false);
   }
 
   useEffect(() => {
-    if(contract) fetchCampaigns();
+    if(contract) {
+      fetchCampaigns();
+    }
   }, [address, contract]);
 
   return (
